@@ -73,7 +73,7 @@ function quote() {
 
 
 
-    let retVal = `@misc{${author.slice(0, 4).toLowerCase()}${date.getFullYear()}${title.slice(0, 4).toLowerCase()}
+    let retVal = `@misc{${author.slice(0, 4).toLowerCase()}${date.getFullYear()}${title.slice(0, 4).toLowerCase()},
     title={${title}},
     author={${author}},
     year={${date.getFullYear()}},

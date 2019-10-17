@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "QuoteURL Bibtex",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Quote Bibtex URL into clipboard",
     "homepage_url": "https://github.com/Dunky13/quoteurl_bibtex",
     "icons": {
@@ -11,8 +11,8 @@
         "128": "images/icon128.png"
     },
     "permissions": [
-        "clipboardWrite", // for copy and cut
-        "clipboardRead", // for paste,
+        "clipboardWrite",
+        "clipboardRead",
         "activeTab"
     ],
     "background": {
