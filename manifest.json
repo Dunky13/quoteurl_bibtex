@@ -1,7 +1,7 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "QuoteURL Bibtex",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Quote Bibtex URL into clipboard",
     "homepage_url": "https://github.com/Dunky13/quoteurl_bibtex",
     "icons": {
@@ -11,16 +11,19 @@
         "128": "images/icon128.png"
     },
     "permissions": [
+        "scripting",
+        "activeTab",
         "clipboardWrite",
-        "clipboardRead",
-        "activeTab"
+        "contextMenus"
+    ],
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
     ],
     "background": {
-        "scripts": [
-            "background.js"
-        ]
+        "service_worker": "background.js"
     },
-    "browser_action": {
+    "action": {
         "default_icon": "images/logo.png"
     }
 }
