@@ -1,6 +1,7 @@
 name: Publish Chrome Extension
 
 on:
+  pull_request:
   push:
     branches:
       - main  # Change to your default branch name if different
@@ -12,13 +13,27 @@ jobs:
     steps:
     # Step 1: Checkout the repository code
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Check Chrome Web Store configuration
+      if: github.event_name == 'push'
+      env:
+        PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+      run: ': "${PUBLISHER_ID:?Set the CHROME_PUBLISHER_ID repository variable to your Chrome Web Store publisher ID}"'
+
+    - name: Check JavaScript syntax
+      run: node --check background.js && node --check content.js
 
     # Step 3: Pack the Chrome Extension into a ZIP file
     - name: Pack Chrome Extension
       run: |
         mkdir -p build
-        zip -r build/extension.zip * -x "*.git*" "node_modules/*" ".github/*" "build/*"
+        zip -r build/extension.zip manifest.json background.js content.js images LISENCE
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
@@ -26,12 +41,13 @@ jobs:
         name: chrome-extension.zip
         path: build/extension.zip
 
-    - name: Upload to Chrome Web Store
-      uses: mobilefirstllc/cws-publish@latest
-      with:
-        action: 'publish'  # one of: upload, publish, testers
-        client_id: ${{ secrets.CLIENT }}
-        client_secret: ${{ secrets.SECRET }}
-        refresh_token: ${{ secrets.TOKEN }}
-        extension_id: 'emfeiimnpfdlnppacfklndigkpkkmbpn' 
-        zip_file: 'build/extension.zip'
+    - name: Upload and submit to Chrome Web Store (API v2)
+      if: github.event_name == 'push'
+      # Omitting the subcommand uploads AND submits; `upload` alone only uploads.
+      run: npx --yes chrome-webstore-upload-cli@4.0.2 --source build/extension.zip
+      env:
+        PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+        EXTENSION_ID: emfeiimnpfdlnppacfklndigkpkkmbpn
+        CLIENT_ID: ${{ secrets.CLIENT }}
+        CLIENT_SECRET: ${{ secrets.SECRET }}
+        REFRESH_TOKEN: ${{ secrets.TOKEN }}
