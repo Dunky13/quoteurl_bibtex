@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "QuoteURL Bibtex",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Quote Bibtex URL into clipboard",
     "homepage_url": "https://github.com/Dunky13/quoteurl_bibtex",
     "icons": {
